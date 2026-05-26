@@ -86,13 +86,24 @@ export const searchCourses = (query) =>
 
 /* ─── History helpers ─── */
 
-export const saveHistory = (entry) =>
-  supabase.from('history').insert(entry).select().single();
+export const saveHistory = ({ user_id, topic, universityName, studentName, studentId, batch, semester, submissionDate }) =>
+  supabase.from('history').insert({
+    user_id,
+    topic,
+    university_name_override: universityName,
+    student_name:             studentName,
+    student_id_override:      studentId,
+    batch_override:           batch,
+    semester_override:        semester,
+    submission_date:          submissionDate
+      ? submissionDate.split('/').reverse().join('-')
+      : null,
+  }).select().single();
 
 export const fetchHistory = (userId) =>
   supabase
     .from('history')
-    .select('*, course:courses(course_code,course_title), template:templates(name)')
+    .select('*, template:templates(name)')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
     .limit(20);

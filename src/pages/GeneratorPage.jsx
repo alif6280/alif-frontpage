@@ -185,7 +185,7 @@ const EditableInput = ({ label, ...props }) => (
 /*  Main Generator Page                                               */
 /* ══════════════════════════════════════════════════════════════════ */
 export const GeneratorPage = () => {
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const [template,  setTemplate]  = useState('kyau');
   const [exporting, setExporting] = useState(false);
 
@@ -232,7 +232,16 @@ export const GeneratorPage = () => {
     setExporting(true);
     try {
       await exportToPDF('front-page-preview', `${form.topic.replace(/\s+/g, '-')}-front-page.pdf`);
-      try { await saveHistory({ ...form, template_id: template }); } catch {}
+      try { 
+        const result = await saveHistory({ ...form, template_id: template, user_id: user?.id });
+        if (result.error) {
+          toast.error('History save failed: ' + result.error.message);
+        } else {
+          toast.success('History saved!');
+        }
+      } catch (e) {
+        toast.error('History error: ' + e.message);
+      }
       toast.success('PDF downloaded!');
     } catch (e) { toast.error('Export failed: ' + e.message); }
     finally { setExporting(false); }

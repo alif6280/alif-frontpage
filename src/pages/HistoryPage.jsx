@@ -43,8 +43,6 @@ export const HistoryPage = () => {
   };
 
   const handleReuse = (item) => {
-    // In a full implementation, you'd pre-populate the generator with this history item
-    // For now, navigate to generator
     navigate('/generator');
     toast('Open the Generator — data pre-fill coming in v2.0');
   };
@@ -82,16 +80,18 @@ export const HistoryPage = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-2">
                       <h3 className="font-bold text-gray-800 dark:text-dk-text truncate">{item.topic || 'Untitled'}</h3>
-                      {item.course?.course_code && <Badge variant="brand">{item.course.course_code}</Badge>}
+                      {item.semester_override && <Badge variant="brand">{item.semester_override}</Badge>}
                     </div>
-                    <p className="text-sm text-gray-500 dark:text-dk-muted truncate">{item.course?.course_title}</p>
+                    <p className="text-sm text-gray-500 dark:text-dk-muted truncate">{item.university_name_override}</p>
                     <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
                       <span className="flex items-center gap-1">
                         <Clock size={11} />
-                        {new Date(item.created_at).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' })}
+                        {item.submission_date
+  ? item.submission_date.split('-').reverse().join('/')
+  : new Date(item.created_at).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' })}
                       </span>
                       <span>{item.student_name}</span>
-                      <span>{item.semester_override || item.semester}</span>
+                      <span>{item.semester_override}</span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
