@@ -200,9 +200,9 @@ export const GeneratorPage = () => {
     designation:    '',
     studentName:    profile?.full_name   || '',
     studentId:      profile?.student_id  || '',
-    batch:          profile?.batch       || '1st Batch',
+    batch: (profile?.batch || '').replace(' Batch', '') || '1st',
     topic:          '',
-    submissionDate: new Date().toISOString().split('T')[0],
+    submissionDate: (() => { const d = new Date(); return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; })(),
     logoUrl:        '',
     teacherDepartment: 'Department of CSE',
   }), [profile]);
@@ -232,7 +232,7 @@ export const GeneratorPage = () => {
     setExporting(true);
     try {
       await exportToPDF('front-page-preview', `${form.topic.replace(/\s+/g, '-')}-front-page.pdf`);
-      await saveHistory({ ...form, template_id: template }).catch(() => {});
+      try { await saveHistory({ ...form, template_id: template }); } catch {}
       toast.success('PDF downloaded!');
     } catch (e) { toast.error('Export failed: ' + e.message); }
     finally { setExporting(false); }
@@ -319,7 +319,7 @@ export const GeneratorPage = () => {
                 onChange={set('topic')}
                 placeholder="Type your assignment topic…"
               />
-              <Input label="Submission Date" type="date" value={form.submissionDate} onChange={set('submissionDate')} />
+              <Input label="Submission Date" type="text" value={form.submissionDate} onChange={set('submissionDate')} placeholder="DD/MM/YYYY" />
             </div>
 
             {/* 4. Teacher */}

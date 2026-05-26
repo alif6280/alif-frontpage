@@ -14,7 +14,7 @@ export const SEMESTERS = [
 export const BATCHES = Array.from({ length: 50 }, (_, i) => {
   const n = i + 1;
   const s = n === 1 ? 'st' : n === 2 ? 'nd' : n === 3 ? 'rd' : 'th';
-  return `${n}${s} Batch`;
+  return `${n}${s}`;
 });
 
 export const TEACHERS = [
