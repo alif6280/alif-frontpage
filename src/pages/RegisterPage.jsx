@@ -75,9 +75,11 @@ export const RegisterPage = () => {
     if (otp.length !== 6) { setError('Enter the 6-digit code.'); return; }
     setLoading(true); setError('');
     const { data, error: err } = await verifyOtp(form.email, otp);
-    if (err) { setError(err.message); setLoading(false); return; }
-    // Create profile row
-    if (data?.user) {
+if (err) { setError(err.message); setLoading(false); return; }
+// Wait for session to be set
+await new Promise(res => setTimeout(res, 1000));
+// Create profile row
+if (data?.user) {
       await upsertProfile({
         id:              data.user.id,
         email:           form.email,

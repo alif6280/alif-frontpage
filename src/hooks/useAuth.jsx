@@ -13,17 +13,20 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data } = await fetchProfile(u.id);
       if (data) {
-        setProfile(data);
+        setProfile(data); // ✅ database এর সব data সরাসরি set
       } else {
-        // Google OAuth – first time, create a skeleton profile
         const meta = u.user_metadata || {};
         const skeleton = {
-          id:              u.id,
-          email:           u.email,
-          full_name:       meta.full_name || meta.name || '',
-          avatar_url:      meta.avatar_url || meta.picture || '',
-          university_name: 'Khwaja Yunus Ali University',
-          role:            'student',
+          id:               u.id,
+          email:            u.email,
+          full_name:        meta.full_name || meta.name || '',
+          avatar_url:       meta.avatar_url || meta.picture || '',
+          university_name:  'Khwaja Yunus Ali University',
+          department:       'Computer Science and Engineering',
+          batch:            '',
+          semester:         '',
+          student_id:       '',
+          role:             'student',
           profile_complete: false,
         };
         const { data: created } = await upsertProfile(skeleton);

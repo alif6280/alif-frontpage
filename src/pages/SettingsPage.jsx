@@ -19,6 +19,7 @@ const Section = ({ icon: Icon, title, children }) => (
 
 export const SettingsPage = () => {
   const { profile, user, updateProfile } = useAuth();
+  console.log('PROFILE DATA:', profile);
   const { dark, toggleDark }             = useTheme();
   const [saving,  setSaving]  = useState(false);
   const [pwSent,  setPwSent]  = useState(false);
@@ -26,13 +27,27 @@ export const SettingsPage = () => {
   const [error,   setError]   = useState('');
 
   const [form, setForm] = useState({
-    full_name:       profile?.full_name       || '',
-    student_id:      profile?.student_id      || '',
-    university_name: profile?.university_name || 'Khwaja Yunus Ali University',
-    department:      profile?.department      || 'Computer Science and Engineering',
-    batch:           profile?.batch           || '1st Batch',
-    semester:        profile?.semester        || '1st Year 1st Semester',
+    full_name:       '',
+    student_id:      '',
+    university_name: 'Khwaja Yunus Ali University',
+    department:      'Computer Science and Engineering',
+    batch:           '1st Batch',
+    semester:        '1st Year 1st Semester',
   });
+
+  // profile load হলে form update করুন
+  React.useEffect(() => {
+    if (profile) {
+      setForm({
+        full_name:       profile.full_name       || '',
+        student_id:      profile.student_id      || '',
+        university_name: profile.university_name || 'Khwaja Yunus Ali University',
+        department:      profile.department      || 'Computer Science and Engineering',
+        batch:           profile.batch           || '1st Batch',
+        semester:        profile.semester        || '1st Year 1st Semester',
+      });
+    }
+  }, [profile]);
 
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }));
 
@@ -68,7 +83,7 @@ export const SettingsPage = () => {
     toast.error('Account deletion requires admin confirmation. Contact support.');
     setDelConf(false);
   };
-
+  if (!profile) return <div>Profile loading... please wait</div>;
   const avatar = profile?.avatar_url;
   const initials = (profile?.full_name || user?.email || 'U').charAt(0).toUpperCase();
 
