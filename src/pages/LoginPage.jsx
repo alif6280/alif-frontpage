@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, BookOpen, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { signInEmail, signInGoogle } from '../lib/supabase';
+import { supabase, signInGoogle } from '../lib/supabase';
 import { Button, Input, Divider, Alert } from '../components/ui';
 
 const GoogleIcon = () => (
@@ -16,18 +16,27 @@ const GoogleIcon = () => (
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const [email,    setEmail]    = useState('');
-  const [password, setPassword] = useState('');
-  const [showPw,   setShowPw]   = useState(false);
-  const [loading,  setLoading]  = useState(false);
-  const [gLoading, setGLoading] = useState(false);
-  const [error,    setError]    = useState('');
+  const [email,      setEmail]      = useState('');
+  const [password,   setPassword]   = useState('');
+  const [showPw,     setShowPw]     = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [loading,    setLoading]    = useState(false);
+  const [gLoading,   setGLoading]   = useState(false);
+  const [error,      setError]      = useState('');
 
   const handleEmail = async (e) => {
     e.preventDefault();
     if (!email || !password) { setError('Please fill in all fields.'); return; }
     setLoading(true); setError('');
-    const { error: err } = await signInEmail(email, password);
+
+    const { error: err } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+      options: {
+        expiresIn: rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24, // 30 days or 1 day
+      },
+    });
+
     setLoading(false);
     if (err) { setError(err.message); return; }
     toast.success('Welcome back!');
@@ -38,14 +47,13 @@ export const LoginPage = () => {
     setGLoading(true); setError('');
     const { error: err } = await signInGoogle();
     if (err) { setError(err.message); setGLoading(false); }
-    // On success, Supabase redirects to /auth/callback
   };
 
   return (
     <div className="min-h-[calc(100vh-60px)] flex items-center justify-center bg-surf-2 dark:bg-dk-bg px-4 py-12">
       <div className="w-full max-w-[420px] animate-slide-up">
-        {/* Card */}
         <div className="bg-white dark:bg-dk-card rounded-3xl border border-surf-border dark:border-dk-border shadow-hover p-8">
+
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-12 h-12 bg-brand-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-card">
@@ -83,22 +91,36 @@ export const LoginPage = () => {
               autoComplete="email"
             />
 
-            <Input
-              label="Password"
-              type={showPw ? 'text' : 'password'}
-              placeholder="••••••••"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              icon={<Lock size={16} />}
-              suffix={
-                <button type="button" onClick={() => setShowPw(s => !s)} className="hover:text-brand-500 transition-colors">
-                  {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
-                </button>
-              }
-              autoComplete="current-password"
-            />
+            <div className="relative">
+              <Input
+                label="Password"
+                type={showPw ? 'text' : 'password'}
+                placeholder="••••••••"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                icon={<Lock size={16} />}
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPw(s => !s)}
+                className="absolute right-3 top-[38px] text-gray-400 hover:text-brand-500 transition-colors z-10"
+              >
+                {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
 
-            <div className="flex justify-end">
+            {/* Remember Me + Forgot Password */}
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={e => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 accent-brand-500 cursor-pointer"
+                />
+                <span className="text-xs text-gray-500 font-medium">Remember me</span>
+              </label>
               <Link to="/forgot-password" className="text-xs text-brand-500 hover:text-brand-600 font-medium">
                 Forgot password?
               </Link>
@@ -115,6 +137,7 @@ export const LoginPage = () => {
               Create one free
             </Link>
           </p>
+
         </div>
       </div>
     </div>

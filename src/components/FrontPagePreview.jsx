@@ -2,8 +2,39 @@ import React from 'react';
 
 const today = () => new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
 
+/* ── Superscript helper ── */
+const Sup = ({ text }) => {
+  const parts = String(text).split(/(\d+(?:st|nd|rd|th))/gi);
+  return (
+    <span>
+      {parts.map((part, i) => {
+        const match = part.match(/^(\d+)(st|nd|rd|th)$/i);
+        if (match) {
+          return (
+            <span key={i}>
+              {match[1]}
+              <sup style={{ fontSize: '0.65em', verticalAlign: 'super', lineHeight: 0 }}>
+                {match[2]}
+              </sup>
+            </span>
+          );
+        }
+        return <span key={i}>{part}</span>;
+      })}
+    </span>
+  );
+};
+
+/* ── Report title helper ── */
+const getReportTitle = (data) => {
+  if (data.reportNumberCustom) return data.reportNumberCustom;
+  if (data.courseType === 'Lab') return 'Lab Report';
+  if (data.courseType === 'Thesis') return 'Thesis';
+  return `Assignment - ${data.reportNumber || '01'}`;
+};
+
 /* ══════════════════════════════════════════════════════════════════
-   KYAU STYLE — Exact match to official PDF layout
+   KYAU STYLE
 ══════════════════════════════════════════════════════════════════ */
 const KYAUStyle = ({ data }) => (
   <div style={{
@@ -18,34 +49,29 @@ const KYAUStyle = ({ data }) => (
     boxSizing: 'border-box',
   }}>
 
-    {/* ── Logo ── */}
-<div style={{ marginBottom: 10 }}>
-  <img
-    src={data.logoUrl || '/kyau-logo.png'}
-    alt="logo"
-    style={{ width: 92, height: 92, objectFit: 'contain' }}
-    onError={e => {
-      e.target.src = '';
-      e.target.style.display = 'none';
-    }}
-  />
-</div>
+    {/* Logo */}
+    <div style={{ marginBottom: 10 }}>
+      <img
+        src={data.logoUrl || '/kyau-logo.png'}
+        alt="logo"
+        style={{ width: 92, height: 92, objectFit: 'contain' }}
+        onError={e => { e.target.style.display = 'none'; }}
+      />
+    </div>
 
-    {/* ── University Name ── */}
+    {/* University Name */}
     <h1 style={{
       fontSize: 20,
       fontWeight: 900,
-      color: '#1a3a6e',
+      color: '#2d6a2d',
       textAlign: 'center',
-      margin: '0 0 8px',
-      textTransform: 'uppercase',
-      letterSpacing: '0.02em',
+      margin: '0 0 6px',
       lineHeight: 1.3,
     }}>
-      Khwaja Yunus Ali University
+      {data.universityName || 'Khwaja Yunus Ali University'}
     </h1>
 
-    {/* ── Report Type ── */}
+    {/* Report Title */}
     <h2 style={{
       fontSize: 18,
       fontWeight: 700,
@@ -54,59 +80,34 @@ const KYAUStyle = ({ data }) => (
       margin: '0 0 32px',
       textAlign: 'center',
     }}>
-      {data.courseType === 'Lab' ? 'Lab Report' : data.courseType === 'Thesis' ? 'Thesis' : 'Assignment'}
+      {getReportTitle(data)}
     </h2>
 
-    {/* ── Info Rows ── */}
-    <table style={{
-      width: '100%',
-      borderCollapse: 'collapse',
-      fontSize: 13.5,
-      marginBottom: 'auto',
-    }}>
+    {/* Info Rows */}
+    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13.5, marginBottom: 'auto' }}>
       <tbody>
-  {[
-    ['Name of the Department', data.department || 'Computer Science and Engineering'],
-    ['Course Code',            data.courseCode  || '—'],
-    ['Course Title',           data.courseTitle || '—'],
-    ['Topic',                  data.topic       || '—'],
-    ['Date of Submission',     data.submissionDate || today()],
-  ].map(([label, value]) => (
-    <tr key={label}>
-      <td style={{
-        fontWeight: 700,
-        width: '44%',
-        paddingTop: 9,
-        paddingBottom: 9,
-        verticalAlign: 'top',
-        whiteSpace: 'nowrap',
-      }}>
-        {label}
-      </td>
-      <td style={{
-        paddingTop: 9,
-        paddingBottom: 9,
-        verticalAlign: 'top',
-        paddingLeft: 8,
-        wordBreak: 'break-word',
-        maxWidth: '200px',
-        fontWeight: 'bold',
-      }}>
-        :&nbsp;&nbsp;{value}
-      </td>
-    </tr>
-  ))}
-</tbody>
+        {[
+          ['Name of the Department', data.department || 'Computer Science and Engineering'],
+          ['Course Code',            data.courseCode  || '—'],
+          ['Course Title',           data.courseTitle || '—'],
+          ['Topic',                  data.topic       || '—'],
+          ['Date of Submission',     data.submissionDate || today()],
+        ].map(([label, value]) => (
+          <tr key={label}>
+            <td style={{ fontWeight: 700, width: '44%', paddingTop: 9, paddingBottom: 9, verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+              {label}
+            </td>
+            <td style={{ paddingTop: 9, paddingBottom: 9, verticalAlign: 'top', paddingLeft: 12, wordBreak: 'break-word',fontWeight: 700, }}>
+              :&nbsp;&nbsp;{value}
+            </td>
+          </tr>
+        ))}
+      </tbody>
     </table>
 
-    {/* ── Instructor Signature ── */}
-    <div style={{ width: '100%', textAlign: 'center', marginBottom: 36 }}>
-      <p style={{
-        fontSize: 12,
-        color: '#333',
-        margin: '0 0 3px',
-        letterSpacing: '0.08em',
-      }}>
+    {/* Instructor Signature */}
+    <div style={{ width: '100%', textAlign: 'center', marginTop: 40, marginBottom: 40 }}>
+      <p style={{ fontSize: 12, color: '#333', margin: '0 0 3px', letterSpacing: '0.08em' }}>
         ..........................................
       </p>
       <p style={{ fontSize: 13, fontWeight: 700, margin: 0 }}>
@@ -114,60 +115,29 @@ const KYAUStyle = ({ data }) => (
       </p>
     </div>
 
-    {/* ── Submitted By / Submitted To ── */}
-    <table style={{
-      width: '100%',
-      borderCollapse: 'collapse',
-      fontSize: 12.5,
-      marginTop: 0,
-      border: '1px solid #bbb',
-    }}>
+    {/* Submitted By / To Table */}
+    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5, border: '1px solid #bbb' }}>
       <thead>
         <tr>
-          <th style={{
-            background: '#1a3a6e',
-            color: '#fff',
-            padding: '10px 18px',
-            textAlign: 'left',
-            fontWeight: 700,
-            fontSize: 13,
-            width: '50%',
-            borderRight: '1px solid #fff',
-          }}>
+          <th style={{ background: '#1a3a6e', color: '#fff', padding: '10px 18px', textAlign: 'left', fontWeight: 700, fontSize: 13, width: '50%', borderRight: '1px solid #fff' }}>
             Submitted by –
           </th>
-          <th style={{
-            background: '#1a3a6e',
-            color: '#fff',
-            padding: '10px 18px',
-            textAlign: 'left',
-            fontWeight: 700,
-            fontSize: 13,
-          }}>
+          <th style={{ background: '#1a3a6e', color: '#fff', padding: '10px 18px', textAlign: 'left', fontWeight: 700, fontSize: 13 }}>
             Submitted to –
           </th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          {/* Student info */}
-          <td style={{
-            padding: '16px 18px',
-            verticalAlign: 'top',
-            borderRight: '1px solid #bbb',
-          }}>
-            <p style={{ fontWeight: 800, fontSize: 13, margin: '0 0 6px' }}>
-              Name: {data.studentName || '—'}
-            </p>
+          <td style={{ padding: '16px 18px', verticalAlign: 'top', borderRight: '1px solid #bbb' }}>
+            <p style={{ fontWeight: 800, fontSize: 13, margin: '0 0 6px' }}>Name: {data.studentName || '—'}</p>
             <p style={{ margin: '0 0 4px' }}>ID Number: {data.studentId || '—'}</p>
-            <p style={{ margin: '0 0 4px' }}>Batch No: {data.batch || '—'}</p>
-            <p style={{ margin: 0 }}>Semester: {data.semester || '—'}</p>
+            <p style={{ margin: '0 0 4px' }}>Batch No: <Sup text={`${data.batch || '—'}`} /></p>
+            <p style={{ margin: '0 0 4px' }}>Semester: <Sup text={data.semester || '—'} /></p>
+            <p style={{ margin: 0 }}>Khwaja Yunus Ali University</p>
           </td>
-          {/* Teacher info */}
           <td style={{ padding: '16px 18px', verticalAlign: 'top' }}>
-            <p style={{ fontWeight: 800, fontSize: 13, margin: '0 0 6px' }}>
-              Name: {data.teacherName || '—'}
-            </p>
+            <p style={{ fontWeight: 800, fontSize: 13, margin: '0 0 6px' }}>Name: {data.teacherName || '—'}</p>
             <p style={{ margin: '0 0 4px' }}>{data.designation || 'Lecturer & Program Co-ordinator'}</p>
             <p style={{ margin: '0 0 4px' }}>{data.teacherDepartment || 'Department of ' + (data.department || 'CSE')}</p>
             <p style={{ margin: 0 }}>Khwaja Yunus Ali University</p>
@@ -203,7 +173,7 @@ const ModernClean = ({ data }) => (
         </div>
       </div>
       <span style={{ display: 'inline-block', background: '#eef2ff', color: '#1a3a6e', fontSize: 10, fontWeight: 800, padding: '4px 10px', borderRadius: 20, marginBottom: 12, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-        {data.courseType === 'Lab' ? 'Lab Report' : 'Assignment'}
+        {getReportTitle(data)}
       </span>
       <h2 style={{ fontSize: 22, fontWeight: 900, color: '#111', margin: '0 0 8px', lineHeight: 1.3 }}>{data.topic || 'Topic'}</h2>
       <p style={{ fontSize: 12, color: '#888', margin: '0 0 36px' }}>{data.courseCode} · {data.courseTitle}</p>
@@ -233,9 +203,7 @@ const Minimal = ({ data }) => (
       <p style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#bbb', margin: 0 }}>Dept. of {data.department || 'CSE'}</p>
     </div>
     <div style={{ flex: 1 }}>
-      <p style={{ fontSize: 10, color: '#bbb', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 12px' }}>
-        {data.courseType === 'Lab' ? 'Lab Report' : 'Assignment'}
-      </p>
+      <p style={{ fontSize: 10, color: '#bbb', letterSpacing: '0.15em', textTransform: 'uppercase', margin: '0 0 12px' }}>{getReportTitle(data)}</p>
       <h1 style={{ fontSize: 26, fontWeight: 400, margin: '0 0 6px', lineHeight: 1.35 }}>{data.topic || 'Topic'}</h1>
       <p style={{ fontSize: 12, color: '#999', margin: '0 0 48px', fontStyle: 'italic' }}>{data.courseCode} — {data.courseTitle}</p>
       <div style={{ borderTop: '0.5px solid #eee', paddingTop: 24 }}>
@@ -259,17 +227,11 @@ const Minimal = ({ data }) => (
 const DarkAcademic = ({ data }) => (
   <div style={{ fontFamily: 'Georgia, Times New Roman, serif', minHeight: '842px', background: '#fff', color: '#111', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
     <div style={{ background: '#0d1b3e', padding: '36px 52px', textAlign: 'center' }}>
-      <p style={{ color: '#c9a84c', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', margin: '0 0 10px', fontWeight: 700 }}>
-        {data.universityName || 'Khwaja Yunus Ali University'}
-      </p>
-      <p style={{ color: 'rgba(201,168,76,0.6)', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>
-        {data.teacherDepartment || 'Department of ' + (data.department || 'CSE')}
-      </p>
+      <p style={{ color: '#c9a84c', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', margin: '0 0 10px', fontWeight: 700 }}>{data.universityName || 'Khwaja Yunus Ali University'}</p>
+      <p style={{ color: 'rgba(201,168,76,0.6)', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', margin: 0 }}>{data.teacherDepartment || 'Department of ' + (data.department || 'CSE')}</p>
     </div>
     <div style={{ padding: '36px 52px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <p style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#999', margin: '0 0 10px' }}>
-        {data.courseType === 'Lab' ? 'Lab Report' : 'Assignment'}
-      </p>
+      <p style={{ fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#999', margin: '0 0 10px' }}>{getReportTitle(data)}</p>
       <h2 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.35 }}>{data.topic || 'Topic'}</h2>
       <p style={{ fontSize: 12, color: '#888', margin: '0 0 32px', fontStyle: 'italic' }}>{data.courseCode} · {data.courseTitle}</p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 'auto' }}>
@@ -304,7 +266,7 @@ const Colorful = ({ data }) => (
     </div>
     <div style={{ padding: '32px 52px', flex: 1, display: 'flex', flexDirection: 'column' }}>
       <span style={{ display: 'inline-block', background: '#e6faf7', color: '#1a9f8a', fontSize: 10, fontWeight: 800, padding: '4px 10px', borderRadius: 20, marginBottom: 14, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-        {data.courseType === 'Lab' ? 'Lab Report' : 'Assignment'}
+        {getReportTitle(data)}
       </span>
       <h2 style={{ fontSize: 22, fontWeight: 900, margin: '0 0 6px', lineHeight: 1.3 }}>{data.topic || 'Topic'}</h2>
       <p style={{ fontSize: 12, color: '#888', margin: '0 0 28px' }}>{data.courseCode} · {data.courseTitle}</p>
@@ -339,9 +301,7 @@ const ThesisStyle = ({ data }) => (
     <p style={{ fontSize: 13, margin: '0 0 4px', color: '#444' }}>Department of {data.department || 'CSE'}</p>
     <p style={{ fontSize: 11, color: '#777', margin: '0 0 32px' }}>Enayetpur, Sirajganj-6751, Bangladesh</p>
     <div style={{ width: '80%', borderTop: '2px solid #1a3a6e', borderBottom: '2px solid #1a3a6e', padding: '20px 0', margin: '0 0 28px' }}>
-      <p style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#777', margin: '0 0 8px' }}>
-        {data.courseType === 'Lab' ? 'Lab Report' : 'Assignment / Thesis'}
-      </p>
+      <p style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#777', margin: '0 0 8px' }}>{getReportTitle(data)}</p>
       <p style={{ fontSize: 20, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.35 }}>{data.topic || 'Title'}</p>
       <p style={{ fontSize: 12, color: '#888', margin: 0, fontStyle: 'italic' }}>{data.courseCode} · {data.courseTitle}</p>
     </div>
@@ -363,29 +323,12 @@ const ThesisStyle = ({ data }) => (
 /* ══════════════════════════════════════════════════════════════════
    Router
 ══════════════════════════════════════════════════════════════════ */
-const TEMPLATES = {
-  kyau:     KYAUStyle,
-  modern:   ModernClean,
-  minimal:  Minimal,
-  dark:     DarkAcademic,
-  colorful: Colorful,
-  thesis:   ThesisStyle,
-};
+const TEMPLATES = { kyau: KYAUStyle, modern: ModernClean, minimal: Minimal, dark: DarkAcademic, colorful: Colorful, thesis: ThesisStyle };
 
 export const FrontPagePreview = ({ data, templateId = 'kyau', id = 'front-page-preview' }) => {
   const Template = TEMPLATES[templateId] || KYAUStyle;
   return (
-    <div
-      id={id}
-      style={{
-        width: '595px',
-        minHeight: '842px',
-        background: '#fff',
-        overflow: 'hidden',
-        boxShadow: '0 4px 32px rgba(0,0,0,0.12)',
-        borderRadius: 8,
-      }}
-    >
+    <div id={id} style={{ width: '595px', minHeight: '842px', background: '#fff', overflow: 'hidden', boxShadow: '0 4px 32px rgba(0,0,0,0.12)', borderRadius: 8 }}>
       <Template data={data} />
     </div>
   );
