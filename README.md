@@ -306,7 +306,7 @@ git push origin feature/AmazingFeature
 
 **Made by MD. Montasir Monir Alif**
 
-[![GitHub](https://img.shields.io/badge/GitHub-your--username-181717?style=for-the-badge&logo=github)](https://github.com/alif6280)
+[![GitHub](https://img.shields.io/badge/GitHub-alif6280-181717?style=for-the-badge&logo=github)](https://github.com/alif6280)
 
 </div>
 
