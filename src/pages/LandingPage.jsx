@@ -135,7 +135,7 @@ export const LandingPage = () => (
           </div>
           <span className="font-display font-bold text-brand-500 text-sm">KYAU Front Page Generator</span>
         </div>
-        <p className="text-xs text-gray-400">© {new Date().getFullYear()} · Built for KYAU CSE Department · Free & Open</p>
+        <p className="text-xs text-gray-400">© {new Date().getFullYear()} · Built by MD. Montasir Monir Alif · Free & Open</p>
       </div>
     </footer>
   </div>
