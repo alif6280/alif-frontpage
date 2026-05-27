@@ -17,7 +17,7 @@
 
 <br/>
 
-[🚀 Live Demo](#) &nbsp;•&nbsp; [📖 Documentation](#-installation) &nbsp;•&nbsp; [🐛 Report Bug](../../issues) &nbsp;•&nbsp; [✨ Request Feature](../../issues)
+[🚀 Live ](https://alif-frontpage.vercel.app) &nbsp;•&nbsp; [📖 Documentation](#-installation) &nbsp;•&nbsp; [🐛 Report Bug](../../issues) &nbsp;•&nbsp; [✨ Request Feature](../../issues)
 
 <br/>
 
@@ -304,7 +304,7 @@ git push origin feature/AmazingFeature
 
 <div align="center">
 
-**Made by MD. Montasir Monir Alif**
+**Made by MD. Montasir Monir ALif**
 
 [![GitHub](https://img.shields.io/badge/GitHub-alif6280-181717?style=for-the-badge&logo=github)](https://github.com/alif6280)
 
