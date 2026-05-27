@@ -1,49 +1,172 @@
-# KYAU Front Page Generator — Complete Setup Guide
+<div align="center">
 
-> Smart Assignment Front Page Generator for Khwaja Yunus Ali University (CSE Department)
-> Version 1.0 · React + Tailwind + Supabase + Vercel
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=KYAU%20Front%20Page%20Generator&fontSize=42&fontColor=fff&animation=twinkling&fontAlignY=32&desc=Academic%20Front%20Page%20Generator%20for%20KYAU%20CSE%20Students&descAlignY=55&descSize=16" width="100%"/>
+
+<br/>
+
+[![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.1-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-2.39.0-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)]()
+
+<br/>
+
+> **✨ Generate academic assignment front pages in seconds —**
+> **with full support for all KYAU CSE Semesters, Courses, and Teachers**
+
+<br/>
+
+[🚀 Live Demo](#) &nbsp;•&nbsp; [📖 Documentation](#-installation) &nbsp;•&nbsp; [🐛 Report Bug](../../issues) &nbsp;•&nbsp; [✨ Request Feature](../../issues)
+
+<br/>
+
+</div>
+
+---
+
+## 📸 Preview
+
+<div align="center">
+
+| Landing Page | Generator | History |
+|:-----------:|:---------:|:-------:|
+| ![Landing](https://via.placeholder.com/280x160/6366f1/white?text=Landing+Page) | ![Generator](https://via.placeholder.com/280x160/8b5cf6/white?text=Generator) | ![History](https://via.placeholder.com/280x160/06b6d4/white?text=History) |
+
+</div>
+
+---
+
+## 🌟 Features
+
+<table>
+<tr>
+<td width="50%">
+
+### 🎓 Academic Focused
+- Full support for all **8 KYAU CSE Semesters**
+- Auto-selection of all **Courses & Labs**
+- **20+ Teachers** pre-loaded with designations
+- **50 Batch** options available
+
+</td>
+<td width="50%">
+
+### 📄 Export Options
+- **PDF** download via jsPDF + html2canvas
+- **DOCX** file export with docx.js
+- **Live Preview** before generating
+- Print-ready format output
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🔐 Auth & User System
+- Secure authentication powered by **Supabase**
+- Email & Password registration
+- Password reset functionality
+- Profile setup & settings page
+
+</td>
+<td width="50%">
+
+### 🛠️ Admin Panel
+- **Student Management**
+- **Teacher Management**
+- **Course & Template** Management
+- Full Admin Dashboard
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### 🌙 UI/UX
+- **Dark / Light Mode** toggle
+- Fully responsive design
+- Smooth animations & transitions
+- Toast notification system
+
+</td>
+<td width="50%">
+
+### 📚 History
+- All previously generated front pages saved
+- Re-download anytime
+- User-specific generation history
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🧰 Tech Stack
+
+<div align="center">
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React 18, React Router DOM v6 |
+| **Styling** | Tailwind CSS 3, Custom Design Tokens |
+| **Backend / Auth** | Supabase (Auth + PostgreSQL) |
+| **PDF Export** | jsPDF + html2canvas |
+| **DOCX Export** | docx.js |
+| **Icons** | Lucide React |
+| **Notifications** | React Hot Toast |
+| **Utilities** | clsx |
+
+</div>
 
 ---
 
 ## 📁 Project Structure
 
 ```
-kyau-frontpage/
-├── public/
-│   └── index.html
-├── src/
-│   ├── components/
-│   │   ├── ui/index.jsx          ← All reusable UI components
-│   │   ├── layout/Navbar.jsx     ← Horizontal top navigation bar
-│   │   └── FrontPagePreview.jsx  ← All 6 live preview templates
-│   ├── data/
-│   │   └── courses.js            ← Full KYAU CSE course database
-│   ├── hooks/
-│   │   ├── useAuth.jsx           ← Auth context (Email + Google)
-│   │   └── useTheme.jsx          ← Dark mode context
-│   ├── lib/
-│   │   ├── supabase.js           ← Supabase client + all DB helpers
-│   │   └── export.js             ← PDF (jsPDF) + DOCX export
-│   ├── pages/
+kyau-frontpage-generator/
+├── 📂 public/
+├── 📂 src/
+│   ├── 📂 components/
+│   │   ├── FrontPagePreview.jsx     # Live preview component
+│   │   ├── 📂 layout/
+│   │   │   └── Navbar.jsx
+│   │   └── 📂 ui/
+│   │       └── index.jsx            # Reusable UI components
+│   │
+│   ├── 📂 data/
+│   │   └── courses.js               # KYAU CSE — Semesters, Courses, Teachers
+│   │
+│   ├── 📂 hooks/
+│   │   ├── useAuth.jsx              # Auth context & hook
+│   │   └── useTheme.jsx             # Dark/Light mode hook
+│   │
+│   ├── 📂 lib/
+│   │   ├── export.js                # PDF & DOCX export logic
+│   │   └── supabase.js              # Supabase client setup
+│   │
+│   ├── 📂 pages/
 │   │   ├── LandingPage.jsx
-│   │   ├── LoginPage.jsx         ← Email + Google OAuth login
-│   │   ├── RegisterPage.jsx      ← 3-step: Account → Academic → OTP
-│   │   ├── AuthCallbackPage.jsx  ← Google OAuth redirect handler
-│   │   ├── ProfileSetupPage.jsx  ← Google users fill academic info here
-│   │   ├── ForgotPasswordPage.jsx
-│   │   ├── GeneratorPage.jsx     ← Main 2-panel generator
+│   │   ├── GeneratorPage.jsx        # Main front page generator
 │   │   ├── HistoryPage.jsx
+│   │   ├── LoginPage.jsx
+│   │   ├── RegisterPage.jsx
 │   │   ├── SettingsPage.jsx
-│   │   └── admin/
+│   │   ├── ProfileSetupPage.jsx
+│   │   ├── ForgotPasswordPage.jsx
+│   │   ├── AuthCallbackPage.jsx
+│   │   └── 📂 admin/
 │   │       ├── AdminDashboard.jsx
 │   │       ├── AdminCourses.jsx
-│   │       ├── AdminTeachers.jsx
 │   │       ├── AdminStudents.jsx
+│   │       ├── AdminTeachers.jsx
 │   │       └── AdminTemplates.jsx
+│   │
 │   ├── App.jsx
 │   ├── index.js
 │   └── index.css
-├── .env.example
+│
 ├── package.json
 ├── tailwind.config.js
 └── README.md
@@ -51,221 +174,83 @@ kyau-frontpage/
 
 ---
 
-## 🚀 Quick Start
+## ⚙️ Installation
 
-### Step 1 — Install dependencies
+### Prerequisites
+
+```bash
+node >= 16.x
+npm >= 8.x
+```
+
+### Step 1 — Clone the Repository
+
+```bash
+git clone https://github.com/your-username/kyau-frontpage-generator.git
+cd kyau-frontpage-generator
+```
+
+### Step 2 — Install Dependencies
 
 ```bash
 npm install
 ```
 
-### Step 2 — Configure environment
+### Step 3 — Setup Environment Variables
 
-```bash
-cp .env.example .env
+Create a `.env` file in the project root:
+
+```env
+REACT_APP_SUPABASE_URL=your_supabase_project_url
+REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-Edit `.env` and fill in your Supabase credentials (see Step 3):
+> 🔑 Get your Supabase URL and Anon Key from [supabase.com](https://supabase.com) → Your Project → Settings → API
 
-```
-REACT_APP_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
-REACT_APP_SUPABASE_ANON_KEY=your-anon-key-here
-```
-
-### Step 3 — Set up Supabase
-
-1. Go to [supabase.com](https://supabase.com) → Create a new project
-2. Go to **Project Settings → API** → copy `Project URL` and `anon public` key into your `.env`
-3. Go to **SQL Editor** → paste and run the SQL below
-
-### Step 4 — Enable Google OAuth (optional but recommended)
-
-See [Google OAuth Setup](#-google-oauth-setup) section below.
-
-### Step 5 — Run the app
+### Step 4 — Run the App
 
 ```bash
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+App will be running at → **http://localhost:3000** 🚀
 
 ---
 
-## 🗄️ Supabase SQL — Run this in SQL Editor
+## 🗄️ Supabase Setup
+
+Run the following SQL in your Supabase SQL Editor:
 
 ```sql
--- ── Extensions ────────────────────────────────────────────────────
-create extension if not exists "uuid-ossp";
-
--- ── Departments ───────────────────────────────────────────────────
-create table if not exists departments (
-  id            uuid primary key default uuid_generate_v4(),
-  name          text not null,
-  short_name    text,
-  university_name text default 'Khwaja Yunus Ali University',
-  created_at    timestamptz default now()
+-- User profiles table
+create table profiles (
+  id uuid references auth.users on delete cascade,
+  full_name text,
+  student_id text,
+  batch text,
+  avatar_url text,
+  is_admin boolean default false,
+  primary key (id)
 );
 
-insert into departments (name, short_name) values
-  ('Computer Science and Engineering', 'CSE'),
-  ('Electrical and Electronic Engineering', 'EEE'),
-  ('Business Administration', 'BBA'),
-  ('Law', 'Law'),
-  ('Pharmacy', 'Pharmacy')
-on conflict do nothing;
-
--- ── Teachers ──────────────────────────────────────────────────────
-create table if not exists teachers (
-  id            uuid primary key default uuid_generate_v4(),
-  name          text not null,
-  designation   text,
-  department_id uuid references departments(id),
-  email         text,
-  created_at    timestamptz default now()
+-- Front page generation history
+create table front_pages (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references profiles(id) on delete cascade,
+  data jsonb,
+  created_at timestamp with time zone default now()
 );
-
--- ── Courses ───────────────────────────────────────────────────────
-create table if not exists courses (
-  id            uuid primary key default uuid_generate_v4(),
-  course_code   text not null,
-  course_title  text not null,
-  course_type   text default 'Theory',   -- Theory | Lab | Project
-  semester      text,                    -- '1st Year 1st Semester' etc.
-  department_id uuid references departments(id),
-  teacher_id    uuid references teachers(id),
-  is_active     boolean default true,
-  created_at    timestamptz default now()
-);
-
--- ── Templates ─────────────────────────────────────────────────────
-create table if not exists templates (
-  id            uuid primary key default uuid_generate_v4(),
-  name          text not null,
-  description   text,
-  thumbnail_url text,
-  is_default    boolean default false,
-  is_active     boolean default true,
-  created_at    timestamptz default now()
-);
-
-insert into templates (name, description, is_default, is_active) values
-  ('KYAU Style',    'Centered logo, bold blue headings, two-column table', true,  true),
-  ('Modern Clean',  'Clean sans-serif, thin accent bar, card-style bottom', false, true),
-  ('Minimal',       'Maximum whitespace, hairline borders, editorial',      false, true),
-  ('Dark Academic', 'Navy header with gold text — elegant formal look',    false, true),
-  ('Colorful',      'Teal-blue gradient header with vibrant accents',       false, true),
-  ('Thesis Style',  'Fully centered, formal layout for final year projects',false, true)
-on conflict do nothing;
-
--- ── Users (profile table — extends Supabase Auth) ─────────────────
-create table if not exists users (
-  id               uuid primary key references auth.users(id) on delete cascade,
-  full_name        text,
-  student_id       text unique,
-  email            text unique,
-  university_name  text default 'Khwaja Yunus Ali University',
-  department       text,
-  department_id    uuid references departments(id),
-  batch            text,
-  semester         text,
-  role             text default 'student',  -- student | admin
-  avatar_url       text,
-  profile_complete boolean default false,
-  created_at       timestamptz default now()
-);
-
--- ── History ───────────────────────────────────────────────────────
-create table if not exists history (
-  id                    uuid primary key default uuid_generate_v4(),
-  user_id               uuid references users(id) on delete cascade,
-  template_id           uuid references templates(id),
-  course_id             uuid references courses(id),
-  university_name_override text,
-  student_name          text,
-  student_id_override   text,
-  batch_override        text,
-  semester_override     text,
-  topic                 text,
-  submission_date       date,
-  pdf_url               text,
-  created_at            timestamptz default now()
-);
-
--- ── Row Level Security ────────────────────────────────────────────
-alter table users     enable row level security;
-alter table history   enable row level security;
-alter table courses   enable row level security;
-alter table teachers  enable row level security;
-alter table templates enable row level security;
-
--- Users: can read/write own row
-create policy "Users read own"   on users for select using (auth.uid() = id);
-create policy "Users update own" on users for update using (auth.uid() = id);
-create policy "Users insert own" on users for insert with check (auth.uid() = id);
-
--- History: own rows only
-create policy "History own" on history for all using (auth.uid() = user_id);
-
--- Courses/Teachers/Templates: readable by all authenticated users
-create policy "Courses readable"   on courses   for select using (auth.role() = 'authenticated');
-create policy "Teachers readable"  on teachers  for select using (auth.role() = 'authenticated');
-create policy "Templates readable" on templates for select using (auth.role() = 'authenticated');
-
--- Admin full access (set role='admin' in users table for admin accounts)
-create policy "Admin full courses"   on courses   for all using ((select role from users where id = auth.uid()) = 'admin');
-create policy "Admin full teachers"  on teachers  for all using ((select role from users where id = auth.uid()) = 'admin');
-create policy "Admin full templates" on templates for all using ((select role from users where id = auth.uid()) = 'admin');
-create policy "Admin full users"     on users     for all using ((select role from users where id = auth.uid()) = 'admin');
-
--- ── Storage buckets ───────────────────────────────────────────────
--- Run these in Supabase Dashboard → Storage (or via SQL):
--- insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true);
--- insert into storage.buckets (id, name, public) values ('logos', 'logos', true);
 ```
 
 ---
 
-## 🔑 Google OAuth Setup
+## 🚀 Build for Production
 
-### In Google Cloud Console
+```bash
+npm run build
+```
 
-1. Go to [console.cloud.google.com](https://console.cloud.google.com)
-2. Create a new project (or use existing)
-3. Go to **APIs & Services → OAuth consent screen**
-   - User type: External
-   - Fill in App name, email
-4. Go to **APIs & Services → Credentials → Create Credentials → OAuth Client ID**
-   - Application type: **Web application**
-   - Authorized redirect URIs — add:
-     ```
-     https://YOUR_PROJECT_ID.supabase.co/auth/v1/callback
-     ```
-5. Copy the **Client ID** and **Client Secret**
-
-### In Supabase Dashboard
-
-1. Go to **Authentication → Providers → Google**
-2. Enable Google
-3. Paste your **Client ID** and **Client Secret**
-4. Go to **Authentication → URL Configuration**
-5. Add to **Redirect URLs**:
-   ```
-   http://localhost:3000/auth/callback
-   https://your-vercel-domain.vercel.app/auth/callback
-   ```
-6. Save
-
-### How it works in the app
-
-- User clicks **"Continue with Google"** on Login or Register page
-- Supabase redirects to Google, user authenticates
-- Google redirects to `https://your-project.supabase.co/auth/v1/callback`
-- Supabase redirects to `/auth/callback` in the React app
-- `AuthCallbackPage.jsx` checks if the profile is complete
-  - **Complete** → goes to `/generator`
-  - **Incomplete** (first login) → goes to `/profile-setup` where the student fills in their Student ID, Batch, Semester, etc.
-- Profile is saved to the `users` table and auto-fills the generator on every subsequent visit
+Production-ready files will be generated in the `build/` folder. You can deploy to any static hosting platform (Vercel, Netlify, GitHub Pages).
 
 ---
 
@@ -275,79 +260,70 @@ create policy "Admin full users"     on users     for all using ((select role fr
 # Install Vercel CLI
 npm i -g vercel
 
-# Build and deploy
+# Deploy
 vercel --prod
 ```
 
-Or connect your GitHub repo to Vercel and it auto-deploys on every push.
-
-**Add environment variables in Vercel:**
-- `REACT_APP_SUPABASE_URL`
-- `REACT_APP_SUPABASE_ANON_KEY`
+> ⚠️ Make sure to add your Environment Variables in Vercel → Project Settings → Environment Variables.
 
 ---
 
-## 👤 Create an Admin Account
+## 🤝 Contributing
 
-1. Register normally (email or Google)
-2. Go to Supabase Dashboard → Table Editor → `users`
-3. Find the row with your email
-4. Change `role` from `student` to `admin`
-5. The Admin panel link will appear in the navbar
+Contributions are always welcome! 🎉
 
----
+```bash
+# 1. Fork the repository
+# 2. Create your feature branch
+git checkout -b feature/AmazingFeature
 
-## 🌱 Seed Courses into Supabase (optional)
+# 3. Commit your changes
+git commit -m 'Add some AmazingFeature'
 
-The app uses the built-in static course data from `src/data/courses.js` as fallback.
-To seed into the DB, go to Supabase SQL Editor and run the insert queries based on the course list in `courses.js`.
+# 4. Push to the branch
+git push origin feature/AmazingFeature
 
-Or use the Admin Panel at `/admin/courses` to add courses one by one.
-
----
-
-## ✅ Feature Checklist
-
-### Version 1.0 (implemented)
-- [x] Email + OTP registration (3-step)
-- [x] Google OAuth login/register
-- [x] Profile auto-complete page for Google users
-- [x] Auto-fill from profile (all fields editable per session)
-- [x] "Reset to my info" button
-- [x] 6 front page templates with live preview
-- [x] Course search + auto-fill teacher info
-- [x] PDF export (jsPDF + html2canvas, A4)
-- [x] DOCX export (docx.js, client-side)
-- [x] Print button
-- [x] Generation history (last 20)
-- [x] Dark mode (entire app, preview stays white)
-- [x] Admin panel: Courses CRUD, Teachers CRUD, Students list, Templates toggle
-- [x] Settings: profile photo, password reset, delete account
-- [x] Mobile responsive
-- [x] Horizontal nav top bar — professional design
-
-### Version 2.0 (planned)
-- [ ] QR verification on PDF
-- [ ] AI topic suggestion (Claude API)
-- [ ] Digital teacher signature on PDF
-- [ ] Watermark support
-- [ ] Reuse previous history entry pre-fills generator
+# 5. Open a Pull Request
+```
 
 ---
 
-## 🛠 Tech Stack
+## 🗺️ Roadmap
 
-| Layer        | Technology                  | Free Plan     |
-|--------------|-----------------------------|---------------|
-| Frontend     | React 18 + Tailwind CSS 3   | Unlimited     |
-| Fonts        | Playfair Display + DM Sans  | Free (Google) |
-| Database     | Supabase (PostgreSQL)        | 500 MB        |
-| Auth         | Supabase Auth (Email + Google) | 50k MAU    |
-| Storage      | Supabase Storage             | 1 GB          |
-| PDF Export   | jsPDF + html2canvas          | Client-side   |
-| DOCX Export  | docx.js                      | Client-side   |
-| Deployment   | Vercel                       | Unlimited     |
+- [ ] 📱 Mobile-optimized PDF export
+- [ ] 🖼️ Custom logo / image upload
+- [ ] 📧 Email notification on generation
+- [ ] 🌐 Multi-university support
+- [x] ✅ Dark mode
+- [x] ✅ DOCX export
+- [x] ✅ Generation history
 
 ---
 
-*Built for KYAU CSE Department · PRD v3.0 · May 2026*
+## 👨‍💻 Author
+
+<div align="center">
+
+**Made by MD. Montasir Monir Alif**
+
+[![GitHub](https://img.shields.io/badge/GitHub-your--username-181717?style=for-the-badge&logo=github)](https://github.com/alif6280)
+
+</div>
+
+---
+
+## 📄 License
+
+```
+MIT License — feel free to use, modify, and distribute.
+```
+
+---
+
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=100&section=footer" width="100%"/>
+
+**⭐ If this project helped you, please consider giving it a star!**
+
+</div>
