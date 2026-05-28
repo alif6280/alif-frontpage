@@ -133,7 +133,7 @@ export const LandingPage = () => (
           <div className="w-7 h-7 bg-brand-500 rounded-lg flex items-center justify-center">
             <BookOpen size={13} className="text-white" />
           </div>
-          <span className="font-display font-bold text-brand-500 text-sm">KYAU Front Page Generator</span>
+          <span className="font-display font-bold text-brand-500 text-sm">Front Page Generator</span>
         </div>
         <p className="text-xs text-gray-400">© {new Date().getFullYear()} · Built by MD. Montasir Monir Alif · Free & Open</p>
       </div>

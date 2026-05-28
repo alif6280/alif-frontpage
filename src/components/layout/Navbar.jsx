@@ -69,7 +69,7 @@ export const Navbar = () => {
                 <BookOpen size={15} className="text-white" strokeWidth={2.5} />
               </div>
               <div className="hidden sm:block leading-none">
-                <span className="font-display font-bold text-brand-500 text-[15px] tracking-tight">KYAU</span>
+                <span className="font-display font-bold text-brand-500 text-[15px] tracking-tight">ALIF</span>
                 <span className="block text-[9px] font-body text-gray-400 uppercase tracking-[0.15em] mt-0.5">Front Page</span>
               </div>
             </Link>
