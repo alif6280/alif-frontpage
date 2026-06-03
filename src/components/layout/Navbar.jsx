@@ -71,14 +71,14 @@ export const Navbar = () => {
 
             {/* ── Brand ── */}
             <Link to="/" className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0 mr-1 sm:mr-2">
-              <div className="w-8 h-8 bg-brand-500 rounded-xl flex items-center justify-center shadow-sm">
-                <BookOpen size={15} className="text-white" strokeWidth={2.5} />
-              </div>
-              <div className="leading-none">
-                <span className="font-display font-bold text-brand-500 dark:text-brand-300 text-[15px] tracking-tight">ALIF</span>
-                <span className="hidden xs:block text-[9px] font-body text-gray-400 dark:text-gray-300 uppercase tracking-[0.15em] mt-0.5">Front Page</span>
-              </div>
-            </Link>
+  <div className="w-8 h-8 bg-brand-500 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
+    <BookOpen size={15} className="text-white" strokeWidth={2.5} />
+  </div>
+  <div className="flex flex-col justify-center leading-none min-w-0">
+    <span className="font-display font-bold text-brand-500 dark:text-brand-300 text-[15px] tracking-tight whitespace-nowrap">ALIF</span>
+    <span className="text-[9px] font-body text-gray-400 dark:text-gray-300 uppercase tracking-[0.15em] mt-0.5 whitespace-nowrap">FRONT PAGE</span>
+  </div>
+</Link>
 
             {/* ── Desktop Nav Links (logged-in) ── */}
             {user && (

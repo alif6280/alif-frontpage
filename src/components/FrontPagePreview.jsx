@@ -130,14 +130,20 @@ const KYAUStyle = ({ data }) => (
       <tbody>
         <tr>
           <td style={{ padding: '16px 18px', verticalAlign: 'top', borderRight: '1px solid #bbb' }}>
-            <p style={{ fontWeight: 800, fontSize: 13, margin: '0 0 6px' }}>Name: {data.studentName || '—'}</p>
+            <p style={{ fontWeight: 800, fontSize: 13, margin: '0 0 6px', display: 'flex', gap: 4 }}>
+  <span style={{ whiteSpace: 'nowrap' }}>Name:</span>
+  <span style={{ wordBreak: 'break-word' }}>{data.studentName || '—'}</span>
+</p>
             <p style={{ margin: '0 0 4px' }}>ID Number: {data.studentId || '—'}</p>
             <p style={{ margin: '0 0 4px' }}>Batch No: <Sup text={`${data.batch || '—'}`} /></p>
             <p style={{ margin: '0 0 4px' }}>Semester: <Sup text={data.semester || '—'} /></p>
             <p style={{ margin: 0 }}>Khwaja Yunus Ali University</p>
           </td>
           <td style={{ padding: '16px 18px', verticalAlign: 'top' }}>
-            <p style={{ fontWeight: 800, fontSize: 13, margin: '0 0 6px' }}>Name: {data.teacherName || '—'}</p>
+            <p style={{ fontWeight: 800, fontSize: 13, margin: '0 0 6px', display: 'flex', gap: 4 }}>
+  <span style={{ whiteSpace: 'nowrap' }}>Name:</span>
+  <span style={{ wordBreak: 'break-word' }}>{data.teacherName || '—'}</span>
+</p>
             <p style={{ margin: '0 0 4px' }}>{data.designation || 'Lecturer & Program Co-ordinator'}</p>
             <p style={{ margin: '0 0 4px' }}>{data.teacherDepartment || 'Department of ' + (data.department || 'CSE')}</p>
             <p style={{ margin: 0 }}>Khwaja Yunus Ali University</p>
