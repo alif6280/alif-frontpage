@@ -2,15 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1a3a6e" />
-    <meta name="description" content="KYAU Assignment Front Page Generator — Generate professional assignment and lab report cover pages in seconds." />
-    <title>Front Page Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-    <!-- Favicon placeholder (replace with actual favicon) -->
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!-- ── Primary Meta ──────────────────────────────────────────── -->
+    <title>ALIF — Front Page Generator</title>
+    <meta name="description" content="Generate professional assignment and lab report cover pages in seconds. KYAU CSE & any university. Free forever." />
+    <meta name="author" content="MD. Montasir Monir Alif" />
+    <meta name="keywords" content="KYAU, front page, assignment, lab report, cover page, Bangladesh, CSE" />
+
+    <!-- ── PWA / Theme ───────────────────────────────────────────── -->
+    <meta name="theme-color" content="#1a3a6e" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ALIF" />
+    <meta name="application-name" content="ALIF" />
+    <meta name="msapplication-TileColor" content="#1a3a6e" />
+    <meta name="msapplication-TileImage" content="%PUBLIC_URL%/logo192.png" />
+
+    <!-- ── Icons ─────────────────────────────────────────────────── -->
+    <link rel="icon" type="image/x-icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/icon-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/icon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="%PUBLIC_URL%/icon-64.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/logo512.png" />
+
+    <!-- ── PWA Manifest ──────────────────────────────────────────── -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- ── Open Graph ────────────────────────────────────────────── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ALIF — Front Page Generator" />
+    <meta property="og:description" content="Generate professional assignment cover pages in seconds. Free forever." />
+    <meta property="og:image" content="%PUBLIC_URL%/logo512.png" />
+
+    <!-- ── Safe area for notched phones ──────────────────────────── -->
+    <style>
+      :root {
+        --sat: env(safe-area-inset-top);
+        --sab: env(safe-area-inset-bottom);
+        --sal: env(safe-area-inset-left);
+        --sar: env(safe-area-inset-right);
+      }
+      #root {
+        padding-left: var(--sal);
+        padding-right: var(--sar);
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

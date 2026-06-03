@@ -1,11 +1,38 @@
 {
-  "short_name": "KYAU FPG",
-  "name": "KYAU Front Page Generator",
+  "short_name": "ALIF",
+  "name": "ALIF Front Page Generator",
+  "description": "Generate professional assignment and lab report cover pages in seconds — KYAU CSE & more.",
   "icons": [
-    { "src": "favicon.ico", "sizes": "64x64 32x32 24x24 16x16", "type": "image/x-icon" }
+    { "src": "icon-16.png",  "sizes": "16x16",   "type": "image/png" },
+    { "src": "icon-32.png",  "sizes": "32x32",   "type": "image/png" },
+    { "src": "icon-64.png",  "sizes": "64x64",   "type": "image/png" },
+    { "src": "icon-128.png", "sizes": "128x128", "type": "image/png" },
+    { "src": "logo192.png",  "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "logo512.png",  "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "theme_color": "#1a3a6e",
-  "background_color": "#ffffff"
+  "background_color": "#0d1117",
+  "categories": ["education", "utilities"],
+  "lang": "bn",
+  "dir": "ltr",
+  "shortcuts": [
+    {
+      "name": "Generator",
+      "short_name": "Generate",
+      "description": "Open Front Page Generator",
+      "url": "/generator",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "History",
+      "short_name": "History",
+      "description": "View generation history",
+      "url": "/history",
+      "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+    }
+  ]
 }

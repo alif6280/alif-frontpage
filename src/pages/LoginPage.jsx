@@ -33,7 +33,7 @@ export const LoginPage = () => {
       email,
       password,
       options: {
-        expiresIn: rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24, // 30 days or 1 day
+        expiresIn: rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24,
       },
     });
 
@@ -59,15 +59,15 @@ export const LoginPage = () => {
             <div className="w-12 h-12 bg-brand-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-card">
               <BookOpen size={20} className="text-white" strokeWidth={2.5} />
             </div>
-            <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-dk-text">Welcome back</h1>
-            <p className="text-sm text-gray-400 mt-1.5">Sign in to your KYAU account</p>
+            <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Welcome back</h1>
+            <p className="text-sm text-gray-400 dark:text-slate-400 mt-1.5">Sign in to your KYAU account</p>
           </div>
 
           {/* Google Button */}
           <Button
             variant="secondary"
             size="lg"
-            className="w-full justify-center mb-5 border-surf-border dark:border-dk-border hover:bg-surf-3 dark:hover:bg-dk-card2 font-semibold"
+            className="w-full justify-center mb-5 border-surf-border dark:border-dk-border hover:bg-surf-3 dark:hover:bg-dk-card2 font-semibold dark:text-white"
             onClick={handleGoogle}
             loading={gLoading}
             icon={!gLoading && <GoogleIcon />}
@@ -104,7 +104,7 @@ export const LoginPage = () => {
               <button
                 type="button"
                 onClick={() => setShowPw(s => !s)}
-                className="absolute right-3 top-[38px] text-gray-400 hover:text-brand-500 transition-colors z-10"
+                className="absolute right-3 top-[38px] text-gray-400 hover:text-brand-500 dark:hover:text-brand-300 transition-colors z-10"
               >
                 {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -119,9 +119,9 @@ export const LoginPage = () => {
                   onChange={e => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded border-gray-300 accent-brand-500 cursor-pointer"
                 />
-                <span className="text-xs text-gray-500 font-medium">Remember me</span>
+                <span className="text-xs text-gray-500 dark:text-slate-400 font-medium">Remember me</span>
               </label>
-              <Link to="/forgot-password" className="text-xs text-brand-500 hover:text-brand-600 font-medium">
+              <Link to="/forgot-password" className="text-xs text-brand-500 dark:text-brand-300 hover:text-brand-600 font-medium">
                 Forgot password?
               </Link>
             </div>
@@ -131,9 +131,9 @@ export const LoginPage = () => {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-gray-400 mt-6">
+          <p className="text-center text-sm text-gray-400 dark:text-slate-400 mt-6">
             Don't have an account?{' '}
-            <Link to="/register" className="text-brand-500 font-semibold hover:text-brand-600">
+            <Link to="/register" className="text-brand-500 dark:text-brand-300 font-semibold hover:text-brand-600">
               Create one free
             </Link>
           </p>
