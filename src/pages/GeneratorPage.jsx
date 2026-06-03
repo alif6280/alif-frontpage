@@ -18,6 +18,13 @@ const REPORT_TYPES = [
   { id: 'Thesis',     label: 'Thesis',     icon: '📚' },
 ];
 
+const WhatsAppIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.532 5.862L.054 23.902a.5.5 0 0 0 .615.612l6.094-1.51A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.523-5.183-1.432l-.362-.217-3.761.932.977-3.696-.236-.374A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+  </svg>
+);
+
 const ReportTypePicker = ({ value, onChange }) => (
   <div className="grid grid-cols-3 gap-2">
     {REPORT_TYPES.map(t => (
@@ -114,7 +121,6 @@ const EditableInput = ({ label, ...props }) => (
   <Input label={label} suffix={<Pencil size={12} className="text-gray-300" />} {...props} />
 );
 
-/* ── Section card wrapper ── */
 const Section = ({ title, icon: Icon, children }) => (
   <div className="bg-white dark:bg-dk-card rounded-2xl border border-surf-border dark:border-dk-border shadow-card p-4 sm:p-5 space-y-4">
     {title && (
@@ -128,9 +134,11 @@ const Section = ({ title, icon: Icon, children }) => (
 
 export const GeneratorPage = () => {
   const { profile, user } = useAuth();
-  const [template, setTemplate] = useState('kyau');
-  const [exporting, setExporting] = useState(false);
-  const [showPreview, setShowPreview] = useState(false); // mobile preview toggle
+  const [template,    setTemplate]    = useState('kyau');
+  const [pdfLoading,  setPdfLoading]  = useState(false);
+  const [docxLoading, setDocxLoading] = useState(false);
+  const [waLoading,   setWaLoading]   = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const defaultForm = useCallback(() => ({
     universityName:      profile?.university_name || 'Khwaja Yunus Ali University',
@@ -178,7 +186,7 @@ export const GeneratorPage = () => {
 
   const handlePDF = async () => {
     if (!form.topic) { toast.error('Please enter a topic first.'); return; }
-    setExporting(true);
+    setPdfLoading(true);
     try {
       await exportToPDF('front-page-preview', `${form.topic.replace(/\s+/g, '-')}-front-page.pdf`);
       try {
@@ -187,15 +195,15 @@ export const GeneratorPage = () => {
       } catch (e) { toast.error('History error: ' + e.message); }
       toast.success('PDF downloaded!');
     } catch (e) { toast.error('Export failed: ' + e.message); }
-    finally { setExporting(false); }
+    finally { setPdfLoading(false); }
   };
 
   const handleDOCX = async () => {
     if (!form.topic) { toast.error('Please enter a topic first.'); return; }
-    setExporting(true);
+    setDocxLoading(true);
     try { await exportToDOCX(form); toast.success('DOCX downloaded!'); }
     catch (e) { toast.error('Export failed: ' + e.message); }
-    finally { setExporting(false); }
+    finally { setDocxLoading(false); }
   };
 
   const handlePrint = () => {
@@ -207,11 +215,86 @@ export const GeneratorPage = () => {
     setTimeout(() => { w.print(); w.close(); }, 500);
   };
 
+  const handleWhatsApp = async () => {
+    if (!form.topic) { toast.error('Please enter a topic first.'); return; }
+    setWaLoading(true);
+    try {
+      const { default: html2canvas } = await import('html2canvas');
+      const { default: jsPDF }       = await import('jspdf');
+
+      const el = document.getElementById('front-page-preview');
+      if (!el) throw new Error('Preview not found');
+
+      const clone = el.cloneNode(true);
+      clone.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:595px;min-height:842px;transform:none;zoom:1;overflow:visible;box-shadow:none;border-radius:0;background:#fff;';
+      document.body.appendChild(clone);
+
+      const canvas = await html2canvas(clone, {
+        scale: 2, useCORS: true, allowTaint: true,
+        backgroundColor: '#ffffff', logging: false, width: 595, windowWidth: 595,
+      });
+      document.body.removeChild(clone);
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.93);
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+      const pdfBlob = pdf.output('blob');
+      const fileName = `${form.topic.replace(/\s+/g, '-')}-front-page.pdf`;
+      const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+
+      if (navigator.share && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: `${form.topic} - Front Page` });
+        toast.success('Shared!');
+      } else {
+        // Desktop fallback — download PDF
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement('a');
+        a.href = url; a.download = fileName;
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        toast('PDF downloaded! Share it manually on WhatsApp.', { icon: '📥' });
+      }
+    } catch (e) {
+      toast.error('Failed: ' + e.message);
+    } finally {
+      setWaLoading(false);
+    }
+  };
+
+  const ActionButtons = ({ mobile }) => (
+    <div className={clsx('flex items-center gap-2 flex-wrap', !mobile && 'mb-4')}>
+      <Button variant="primary"   size="sm" icon={<Download size={14} />} onClick={handlePDF}   loading={pdfLoading}>
+        {mobile ? 'PDF' : 'Download PDF'}
+      </Button>
+      <Button variant="secondary" size="sm" icon={<FileText size={14} />} onClick={handleDOCX}  loading={docxLoading}>
+        {mobile ? 'DOCX' : 'Download DOCX'}
+      </Button>
+      <Button variant="ghost"     size="sm" icon={<Printer size={14} />}  onClick={handlePrint}>
+        Print
+      </Button>
+      <button onClick={handleWhatsApp} disabled={waLoading}
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-60 text-white transition-all">
+        {waLoading
+          ? <span className="w-3 h-3 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+          : <WhatsAppIcon />}
+        {waLoading ? '...' : 'Share'}
+      </button>
+      {mobile && (
+        <button onClick={() => setShowPreview(s => !s)}
+          className="ml-auto flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-surf-border dark:border-dk-border text-gray-600 dark:text-slate-300 bg-white dark:bg-dk-card transition-all">
+          {showPreview ? <EyeOff size={13} /> : <Eye size={13} />}
+          {showPreview ? 'Hide' : 'Preview'}
+        </button>
+      )}
+    </div>
+  );
+
   return (
     <div className="min-h-[calc(100vh-56px)] bg-surf-2 dark:bg-dk-bg">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
 
-        {/* ── Page Header ── */}
         <div className="flex items-start justify-between mb-4 sm:mb-5 gap-2">
           <div className="min-w-0">
             <h1 className="font-display font-bold text-lg sm:text-xl text-gray-900 dark:text-white leading-tight">Front Page Generator</h1>
@@ -225,27 +308,17 @@ export const GeneratorPage = () => {
           </button>
         </div>
 
-        {/* ── Mobile: Export + Preview toggle bar ── */}
-        <div className="lg:hidden mb-4 flex items-center gap-2 flex-wrap">
-          <Button variant="primary"   size="sm" icon={<Download size={14} />} onClick={handlePDF}   loading={exporting}>PDF</Button>
-          <Button variant="secondary" size="sm" icon={<FileText size={14} />} onClick={handleDOCX}  loading={exporting}>DOCX</Button>
-          <Button variant="ghost"     size="sm" icon={<Printer size={14} />}  onClick={handlePrint}>Print</Button>
-          <button
-            onClick={() => setShowPreview(s => !s)}
-            className="ml-auto flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-xl border border-surf-border dark:border-dk-border text-gray-600 dark:text-slate-300 bg-white dark:bg-dk-card transition-all">
-            {showPreview ? <EyeOff size={13} /> : <Eye size={13} />}
-            {showPreview ? 'Hide Preview' : 'Show Preview'}
-          </button>
+        <div className="lg:hidden mb-4">
+          <ActionButtons mobile />
         </div>
 
-        {/* ── Mobile Preview (collapsible) ── */}
         {showPreview && (
-          <div className="lg:hidden mb-4 bg-gray-100 dark:bg-dk-card2 rounded-2xl p-3 overflow-auto border border-surf-border dark:border-dk-border">
-            <div className="origin-top-left transform-gpu" style={{ 
-  transform: `scale(${window.innerWidth / 595})`,
-  width: `${595}px`,
-  transformOrigin: 'top left'
-}}>
+          <div className="lg:hidden mb-4 bg-gray-100 dark:bg-dk-card2 rounded-2xl p-3 overflow-hidden border border-surf-border dark:border-dk-border">
+            <div style={{
+              transform: `scale(${(window.innerWidth - 48) / 595})`,
+              width: '595px',
+              transformOrigin: 'top left',
+            }}>
               <FrontPagePreview data={form} templateId={template} id="front-page-preview-mobile" />
             </div>
           </div>
@@ -253,10 +326,8 @@ export const GeneratorPage = () => {
 
         <div className="grid lg:grid-cols-[420px_1fr] gap-4 sm:gap-6 items-start">
 
-          {/* ── LEFT: Form ── */}
           <div className="space-y-4 sm:space-y-5">
 
-            {/* 1. Report Type */}
             <Section title="Report Type" icon={FileIcon}>
               <ReportTypePicker value={form.courseType} onChange={(v) => setForm(f => ({ ...f, courseType: v }))} />
               <div className="grid grid-cols-2 gap-3">
@@ -265,16 +336,10 @@ export const GeneratorPage = () => {
                   value={form.reportNumber} onChange={set('reportNumber')}>
                   {ASSIGNMENT_NUMBERS.map(n => <option key={n} value={n}>{n}</option>)}
                 </Select>
-                <EditableInput
-                  label="Custom Title (optional)"
-                  value={form.reportNumberCustom || ''}
-                  onChange={set('reportNumberCustom')}
-                  placeholder="e.g. Assignment - 01"
-                />
+                <EditableInput label="Custom Title (optional)" value={form.reportNumberCustom || ''} onChange={set('reportNumberCustom')} placeholder="e.g. Assignment - 01" />
               </div>
             </Section>
 
-            {/* 2. University */}
             <Section title="University">
               <LogoUploader value={form.logoUrl} onChange={(v) => setForm(f => ({ ...f, logoUrl: v }))} />
               <EditableInput label="University Name" value={form.universityName} onChange={set('universityName')} />
@@ -287,19 +352,17 @@ export const GeneratorPage = () => {
               </Select>
             </Section>
 
-            {/* 3. Course */}
             <Section title="Course Details">
               <CourseSearch semester={form.semester} onSelect={onCourseSelect} />
               <EditableInput label="Course Code"  value={form.courseCode}  onChange={set('courseCode')}  placeholder="e.g. CSE 2202" />
               <EditableInput label="Course Title" value={form.courseTitle} onChange={set('courseTitle')} placeholder="Course Title" />
-              <Input label="Topic / Title"    value={form.topic}           onChange={set('topic')}           placeholder="Type your assignment topic…" />
-              <Input label="Submission Date"  value={form.submissionDate}  onChange={set('submissionDate')}  placeholder="DD/MM/YYYY" />
+              <Input label="Topic / Title"   value={form.topic}          onChange={set('topic')}          placeholder="Type your assignment topic…" />
+              <Input label="Submission Date" value={form.submissionDate} onChange={set('submissionDate')} placeholder="DD/MM/YYYY" />
             </Section>
 
-            {/* 4. Teacher */}
             <Section title="Teacher">
-              <EditableInput label="Teacher Name"  value={form.teacherName}  onChange={set('teacherName')}  placeholder="Auto-filled from course" />
-              <EditableInput label="Designation"   value={form.designation}  onChange={set('designation')}  placeholder="Auto-filled from course" />
+              <EditableInput label="Teacher Name" value={form.teacherName} onChange={set('teacherName')} placeholder="Auto-filled from course" />
+              <EditableInput label="Designation"  value={form.designation} onChange={set('designation')}  placeholder="Auto-filled from course" />
               <Select label="Teacher Department" value={form.teacherDepartment} onChange={set('teacherDepartment')}>
                 {['Department of CSE','Department of EEE','Department of BBA','Department of Law','Department of Pharmacy','Department of English','Department of Mathematics','Department of Physics','Department of Statistics','Department of Economics','Department of Humanities'].map(d => (
                   <option key={d} value={d}>{d}</option>
@@ -307,11 +370,8 @@ export const GeneratorPage = () => {
               </Select>
             </Section>
 
-            {/* 5. Student */}
             <Section title="Student Details">
-              <div className="flex items-center justify-between -mt-1">
-                <span className="text-xs text-gray-400 dark:text-slate-500 italic">Editable (session-only)</span>
-              </div>
+              <span className="text-xs text-gray-400 dark:text-slate-500 italic -mt-1 block">Editable (session-only)</span>
               <EditableInput label="Student Name" value={form.studentName} onChange={set('studentName')} />
               <EditableInput label="Student ID"   value={form.studentId}   onChange={set('studentId')} />
               <div className="grid grid-cols-2 gap-3">
@@ -324,20 +384,14 @@ export const GeneratorPage = () => {
               </div>
             </Section>
 
-            {/* 6. Template */}
             <Section title="Template Style" icon={Layers}>
               <TemplatePicker value={template} onChange={setTemplate} />
             </Section>
 
           </div>
 
-          {/* ── RIGHT: Preview (desktop only) ── */}
           <div className="hidden lg:block sticky top-[76px]">
-            <div className="flex items-center gap-2 mb-4 flex-wrap">
-              <Button variant="primary"   size="sm" icon={<Download size={14} />} onClick={handlePDF}   loading={exporting}>Download PDF</Button>
-              <Button variant="secondary" size="sm" icon={<FileText size={14} />} onClick={handleDOCX}  loading={exporting}>Download DOCX</Button>
-              <Button variant="ghost"     size="sm" icon={<Printer size={14} />}  onClick={handlePrint}>Print</Button>
-            </div>
+            <ActionButtons mobile={false} />
             <div className="bg-gray-100 dark:bg-dk-card2 rounded-2xl p-4 overflow-auto border border-surf-border dark:border-dk-border min-h-[600px] flex items-start justify-center">
               <div className="scale-[0.85] origin-top transform-gpu transition-transform">
                 <FrontPagePreview data={form} templateId={template} id="front-page-preview" />
