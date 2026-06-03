@@ -119,7 +119,7 @@ const KYAUStyle = ({ data }) => (
     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12.5, border: '1px solid #bbb' }}>
       <thead>
         <tr>
-          <th style={{ background: '#1a3a6e', color: '#fff', padding: '10px 18px', textAlign: 'left', fontWeight: 700, fontSize: 13, width: '50%', borderRight: '1px solid #fff' }}>
+          <th style={{ background: '#1a3a6e', color: '#fff', padding: '10px 18px', textAlign: 'left', fontWeight: 700, fontSize: 13, width: '52%', borderRight: '1px solid #fff' }}>
             Submitted by –
           </th>
           <th style={{ background: '#1a3a6e', color: '#fff', padding: '10px 18px', textAlign: 'left', fontWeight: 700, fontSize: 13 }}>
@@ -129,7 +129,7 @@ const KYAUStyle = ({ data }) => (
       </thead>
       <tbody>
         <tr>
-          <td style={{ padding: '16px 18px', verticalAlign: 'top', borderRight: '1px solid #bbb' }}>
+          <td style={{ padding: '16px 18px', verticalAlign: 'top', borderRight: '1px solid #bbb', width: '52%' }}>
             <p style={{ fontWeight: 800, fontSize: 13, margin: '0 0 6px', display: 'flex', gap: 4 }}>
   <span style={{ whiteSpace: 'nowrap' }}>Name:</span>
   <span style={{ wordBreak: 'break-word' }}>{data.studentName || '—'}</span>

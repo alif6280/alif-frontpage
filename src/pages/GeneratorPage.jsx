@@ -241,7 +241,11 @@ export const GeneratorPage = () => {
         {/* ── Mobile Preview (collapsible) ── */}
         {showPreview && (
           <div className="lg:hidden mb-4 bg-gray-100 dark:bg-dk-card2 rounded-2xl p-3 overflow-auto border border-surf-border dark:border-dk-border">
-            <div className="scale-[0.55] origin-top-left transform-gpu" style={{ width: '182%' }}>
+            <div className="origin-top-left transform-gpu" style={{ 
+  transform: `scale(${window.innerWidth / 595})`,
+  width: `${595}px`,
+  transformOrigin: 'top left'
+}}>
               <FrontPagePreview data={form} templateId={template} id="front-page-preview-mobile" />
             </div>
           </div>
